@@ -6,10 +6,9 @@ app = Flask(__name__)
 api = Api(app)
 
 
-    
+# END-POINTS:  
 api.add_resource(listando_hoteis, '/hoteis')
-
-api.add_resource(hoteis, '/hoteis/<int:hotel_id>')
+api.add_resource(hoteis, '/hoteis/<int:hotel_id>') 
 
 if __name__ == '__main__':
     app.run(debug=True) #enquanto estivermos desenvolvendo. 
