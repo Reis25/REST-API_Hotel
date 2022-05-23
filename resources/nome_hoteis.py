@@ -93,11 +93,12 @@ class hoteis(Resource):
         lista_hoteis.append(novo_hotel)
         return novo_hotel, 201 # codigo de insersão na lista/banco
         
-         
-        
-         
-    
-    
     #Deletando dados 
     def delete(self, hotel_id): 
-        pass 
+        global lista_hoteis
+        lista_hoteis = [hotel for hotel in lista_hoteis if hotel['hotel_id'] != hotel_id]
+        
+        return {'massage': 'Hotel deleted.'}
+        
+        
+         
