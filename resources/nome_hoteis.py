@@ -1,5 +1,5 @@
 from flask_restful import Resource,reqparse
-
+from models.hotel import HotelModel
 
 #reqparser: recebe dados de uma requisição
 
@@ -26,6 +26,8 @@ lista_hoteis = [
         'diaria': 300
     }
 ]
+
+# Crindo uma classe modelo para os hoteis: 
 
 class listando_hoteis(Resource):
     
@@ -55,41 +57,34 @@ class hoteis(Resource):
             return ht
         return {'message': 'Hotel not found'}, 404 #status da aplicação: Not Found
         
+        
     # Insert: Inserindo dados na lista/base de dados.
     def post(self, hotel_id):
-        
         #Construtor: recebe dados chaves e valores passado na requisição
         dados = hoteis.argumentos.parse_args()
-        
-        novo_hotel =  {
-        'hotel_id': hotel_id,
-        'nome': dados['nome'],
-        'avaliacao': dados['avaliacao'],
-        'cidade': dados['cidade'],
-        'diaria': dados['diaria']
-        }
-        
+        hotel_objeto = HotelModel(hotel_id, **dados)
+        novo_hotel = hotel_objeto.json()
+        # usando o conceito de kargs em **dados
+        #novo_hotel =  {'hotel_id': hotel_id, **dados}
         #Adicionando o hotel vindo da requisição na lista de hoteis: 
         lista_hoteis.append(novo_hotel)
-        
-        return novo_hotel, 200
+        return novo_hotel, 201
         
     #Update/Insert: Se o ID já existir ele atualiza, caso contrário ele cria. 
     def put(self, hotel_id):
-        
         dados = hoteis.argumentos.parse_args()
         
         # usando o conceito de kargs em **dados
-        novo_hotel =  {
-        'hotel_id': hotel_id,
-        **dados
-        }
+        #novo_hotel = {'hotel_id': hotel_id, **dados}
+        #hotel = hoteis.find_hotel(hotel_id)
         
+        hotel_objeto = HotelModel(hotel_id, **dados)
+        novo_hotel = hotel_objeto.json()
         hotel = hoteis.find_hotel(hotel_id)
         
         if hotel:
             hotel.update(novo_hotel)
-            return novo_hotel, 200 # codigo de codigo com sucesso. 
+            return hotel, 200 # codigo de codigo com sucesso. 
         lista_hoteis.append(novo_hotel)
         return novo_hotel, 201 # codigo de insersão na lista/banco
         
